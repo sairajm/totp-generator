@@ -11,7 +11,7 @@ t0 = 0
 @app.route('/generate')
 def generate_totp():
     secretKey = request.args.get('code')
-    unix_utc_time = int(datetime.now(tz=timezone.utc).timestamp() * 1000)
+    unix_utc_time = int(datetime.now(tz=timezone.utc).timestamp())
     number_of_time_steps =  ( unix_utc_time - t0 / time_step )
     response = str(number_of_time_steps)
     return response
