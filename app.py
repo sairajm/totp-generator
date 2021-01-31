@@ -1,5 +1,6 @@
 from flask import Flask, request
 from datetime import datetime, timezone
+import time
 import hashlib
 import hmac
 import base64
@@ -48,7 +49,7 @@ def generate_totp():
     return response
 
 def get_otp(computed_hash):
-    offset = computed_hash[len(computed_hash) - 1] & 0xf # 0-15 low-order 4 bits of computed_hash[19]
+    offset = computed_hash[-1] & 0xf # 0-15 low-order 4 bits of computed_hash[19]
 
     # Ref: https://tools.ietf.org/html/rfc4226#section-5.4
 
@@ -86,8 +87,13 @@ def identify_algorithm_to_use(alg):
         return hashlib.sha1
 
 def compute_hash(secretKey, time):
+    if isBase32(secretKey):
+        secretKey = base64.b32decode(secretKey.upper() + '=' * ((8 - len(secretKey)) % 8))
 
-    key = bytearray.fromhex(secretKey)
+    key = secretKey
+    if secretKey is bytes:
+        key = bytearray.fromhex(secretKey)
+
     message = bytearray.fromhex(time)
 
     digester = hmac.new(key, message, algorithm)
@@ -99,7 +105,7 @@ def get_number_of_time_steps():
     unix_utc_time = int(datetime.now(tz=timezone.utc).timestamp())
     number_of_time_steps =  ( unix_utc_time - t0 / time_step )
 
-    hex_steps = hex(int(number_of_time_steps))
+    hex_steps = hex(int(number_of_time_steps)).upper()
 
     hex_steps = hex_steps[2:len(hex_steps)]
 
@@ -107,6 +113,12 @@ def get_number_of_time_steps():
         hex_steps = "0" + hex_steps
 
     return hex_steps
+
+def isBase32(s):
+    try:
+        return base64.b32encode(base64.b32decode(s)) == bytes(s, 'utf-8')
+    except Exception:
+        return False
 
 if __name__ == '__main__':
     app.run()
