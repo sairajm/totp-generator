@@ -13,12 +13,16 @@ digits = 6
 
 @app.route('/generate')
 def generate_totp():
+    global digits, algorithm
+
     code_query_param = request.args.get('code')
     hashing_algorithm = request.args.get('alg')
     digits_to_return = request.args.get('digits')
 
     if digits_to_return is not None and str(digits_to_return).isnumeric:
         digits = int(digits_to_return)
+
+    print('OTP length: ', digits)
 
     if digits > 8:
         return "Bad input, max supported digit is 8.", 400
@@ -31,7 +35,9 @@ def generate_totp():
     if "".__eq__(secretKey) or len(secretKey) < 20:
         return "Bad input, expected non-null or non-empty code.", 400
 
-    algorithm = identify_algorithm_to_use(hashing_algorithm)    
+    algorithm = identify_algorithm_to_use(hashing_algorithm)
+
+    print("Using algorithm: ", algorithm)
 
     number_of_time_steps =  get_number_of_time_steps()
 
@@ -44,7 +50,13 @@ def generate_totp():
 def get_otp(computed_hash):
     offset = computed_hash[len(computed_hash) - 1] & 0xf
 
+    print('offset: ', offset)
+
     binary = ((computed_hash[offset] & 0x7f) << 24) | ((computed_hash[offset + 1] & 0xff) << 16) | ((computed_hash[offset + 2] & 0xff) << 8) | (computed_hash[offset + 3] & 0xff)
+
+    print('binary: ', binary)
+
+    print('number of digits required: ', order_of_power[digits])
 
     otp = binary % order_of_power[digits]
 
@@ -59,7 +71,7 @@ def identify_algorithm_to_use(alg):
     if alg is None:
         return hashlib.sha1
     
-    str_alg = str(alg).lower
+    str_alg = str(alg).lower()
     
     if "sha1".__eq__(str_alg):
         return hashlib.sha1
@@ -93,7 +105,7 @@ def get_number_of_time_steps():
     while (len(hex_steps) < 16):
         hex_steps = "0" + hex_steps
 
-    return hex_steps.strip()
+    return hex_steps
 
 if __name__ == '__main__':
     app.run()
