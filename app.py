@@ -26,19 +26,19 @@ def generate_totp():
     print('OTP length: ', digits)
 
     if digits > 8:
-        return "Bad input, max supported digit is 8.", 400
+        return 'Bad input, max supported digit is 8.', 400
 
     if code_query_param is None:
-        return "Bad input, expected non-null or non-empty code.", 400
+        return 'Bad input, expected non-null or non-empty code.', 400
 
     secretKey = str(code_query_param)
 
     if "".__eq__(secretKey) or len(secretKey) < 20:
-        return "Bad input, expected non-null or non-empty code.", 400
+        return 'Bad input, expected non-null or non-empty code.', 400
 
     algorithm = identify_algorithm_to_use(hashing_algorithm)
 
-    print("Using algorithm: ", algorithm)
+    print('Using algorithm: ', algorithm)
 
     number_of_time_steps =  get_number_of_time_steps()
 
@@ -65,7 +65,7 @@ def get_otp(computed_hash):
     result = str(otp)
 
     while (len(result) < digits):
-        result = "0" + result
+        result = '0' + result
 
     return result
 
@@ -75,13 +75,13 @@ def identify_algorithm_to_use(alg):
     
     str_alg = str(alg).lower()
     
-    if "sha1".__eq__(str_alg):
+    if 'sha1'.__eq__(str_alg):
         return hashlib.sha1
-    elif "sha224".__eq__(str_alg):
+    elif 'sha224'.__eq__(str_alg):
         return hashlib.sha224
-    elif "sha256".__eq__(str_alg):
+    elif 'sha256'.__eq__(str_alg):
         return hashlib.sha256
-    elif "sha512".__eq__(str_alg):
+    elif 'sha512'.__eq__(str_alg):
         return hashlib.sha512
     else:
         return hashlib.sha1
@@ -113,7 +113,7 @@ def get_number_of_time_steps():
     hex_steps = hex_steps[2:len(hex_steps)]
 
     while (len(hex_steps) < 16):
-        hex_steps = "0" + hex_steps
+        hex_steps = '0' + hex_steps
 
     return hex_steps
 

@@ -11,7 +11,7 @@ algorithm = hashlib.sha1
 order_of_power = [1,10,100,1000,10000,100000,1000000,10000000,100000000]
 digits = 6
 
-def generate_totp(code, alg="sha256", digits_qp="6"):
+def generate_totp(code, alg="sha1", digits_qp="6"):
     global digits, algorithm
 
     code_query_param = code
@@ -24,15 +24,15 @@ def generate_totp(code, alg="sha256", digits_qp="6"):
     print('OTP length: ', digits)
 
     if digits > 8:
-        return "Bad input, max supported digit is 8.", 400
+        raise Exception ("Bad input, max supported digit is 8.")
 
     if code_query_param is None:
-        return "Bad input, expected non-null or non-empty code.", 400
+        raise Exception ("Bad input, expected non-null or non-empty code.")
 
     secretKey = str(code_query_param)
 
     if "".__eq__(secretKey) or len(secretKey) < 20:
-        return "Bad input, expected non-null or non-empty code.", 400
+        raise Exception("Bad input, expected non-null or non-empty code.")
 
     algorithm = identify_algorithm_to_use(hashing_algorithm)
 
@@ -63,7 +63,7 @@ def get_otp(computed_hash):
     result = str(otp)
 
     while (len(result) < digits):
-        result = "0" + result
+        result = '0' + result
 
     return result
 
@@ -73,13 +73,13 @@ def identify_algorithm_to_use(alg):
     
     str_alg = str(alg).lower()
     
-    if "sha1".__eq__(str_alg):
+    if 'sha1'.__eq__(str_alg):
         return hashlib.sha1
-    elif "sha224".__eq__(str_alg):
+    elif 'sha224'.__eq__(str_alg):
         return hashlib.sha224
-    elif "sha256".__eq__(str_alg):
+    elif 'sha256'.__eq__(str_alg):
         return hashlib.sha256
-    elif "sha512".__eq__(str_alg):
+    elif 'sha512'.__eq__(str_alg):
         return hashlib.sha512
     else:
         return hashlib.sha1
@@ -104,14 +104,14 @@ def compute_hash(secretKey, time):
 
 def get_number_of_time_steps():
     # unix_utc_time = datetime.now(tz=timezone.utc).timestamp()
-    number_of_time_steps =  int( time.time() - t0 / time_step )
+    number_of_time_steps =  int( (time.time() - t0) / time_step )
 
     hex_steps = hex(number_of_time_steps).upper()
 
     hex_steps = hex_steps[2:len(hex_steps)]
 
     while (len(hex_steps) < 16):
-        hex_steps = "0" + hex_steps
+        hex_steps = '0' + hex_steps
 
     return hex_steps
 
