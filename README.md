@@ -19,14 +19,14 @@ A free time based OTP generator(client). Based on [RFC-6238](https://tools.ietf.
 5. Deploy it in a cloud function or run the flask server locally :)
 6. If you want to execute this as a regular python script to try it out
 
-    `python3 local.py <<< base32encodedString`
+    `python3 local.py <<< base32encodedString` or `python3 local.py <<< hexEncodedString`
 
 ## Input
 
 Sample input:
 `http://127.0.0.1:5000/generate?code=1d319930bdb2ea7d580080f637cd9e53d6ef1767&digits=6`
 
-`code` is the secret key for the SHA-1 hash(hex encoded).
+`code` is the secret key for the SHA-1 hash(hex encoded) OR use a base32 secret key.
 `digits` is number of digits you want the algorithm to return (max 8).
 `alg` is the type of SHA algorithm to be used based on the code provided. `SHA-1, SHA-256, SHA-512` supported.
 
