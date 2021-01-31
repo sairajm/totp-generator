@@ -26,3 +26,8 @@ Sample input:
 `code` is the secret key for the SHA-1 hash.
 `digits` is number of digits you want the algorithm to return (max 8).
 `alg` is the type of SHA algorithm to be used based on the code provided. `SHA-1, SHA-256, SHA-512` supported.
+
+## Output
+Here is a sample output:
+
+![img](sample.png)
