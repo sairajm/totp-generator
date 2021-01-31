@@ -35,21 +35,11 @@ def generate_totp():
 
     number_of_time_steps =  get_number_of_time_steps()
 
-    time_str = get_time(number_of_time_steps)
-
-    computed_hash = compute_hash(secretKey, time_str)
+    computed_hash = compute_hash(secretKey, number_of_time_steps)
 
     response = get_otp(computed_hash)
 
     return response
-
-def get_time(number_of_time_steps):
-    time_str = str(number_of_time_steps)
-
-    while (len(time_str) < 16):
-        time_str = "0" + time_str
-
-    return time_str
 
 def get_otp(computed_hash):
     offset = computed_hash[len(computed_hash) - 1] & 0xf
@@ -83,8 +73,9 @@ def identify_algorithm_to_use(alg):
         return hashlib.sha1
 
 def compute_hash(secretKey, time):
-    key = bytes(secretKey, 'UTF-8')
-    message = bytes(time, 'UTF-8')
+
+    key = bytearray.fromhex(secretKey)
+    message = bytearray.fromhex(time)
 
     digester = hmac.new(key, message, algorithm)
     signature1 = digester.digest()
@@ -95,7 +86,14 @@ def get_number_of_time_steps():
     unix_utc_time = int(datetime.now(tz=timezone.utc).timestamp())
     number_of_time_steps =  ( unix_utc_time - t0 / time_step )
 
-    return number_of_time_steps;
+    hex_steps = hex(int(number_of_time_steps))
+
+    hex_steps = hex_steps[2:len(hex_steps)]
+
+    while (len(hex_steps) < 16):
+        hex_steps = "0" + hex_steps
+
+    return hex_steps.strip()
 
 if __name__ == '__main__':
     app.run()
