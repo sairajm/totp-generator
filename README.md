@@ -1,5 +1,5 @@
 # totp-generator
-A free time based OTP generator(client). Based on [RFC-6238](https://tools.ietf.org/html/rfc6238) spec.
+A free, time-based OTP generator(client). Based on [RFC-6238](https://tools.ietf.org/html/rfc6238) spec.
 
 ## Setup
 1. Requires python3.
