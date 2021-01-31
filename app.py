@@ -48,17 +48,18 @@ def generate_totp():
     return response
 
 def get_otp(computed_hash):
-    offset = computed_hash[len(computed_hash) - 1] & 0xf
+    offset = computed_hash[len(computed_hash) - 1] & 0xf # 0-15 low-order 4 bits of computed_hash[19]
 
-    print('offset: ', offset)
+    # Ref: https://tools.ietf.org/html/rfc4226#section-5.4
 
-    binary = ((computed_hash[offset] & 0x7f) << 24) | ((computed_hash[offset + 1] & 0xff) << 16) | ((computed_hash[offset + 2] & 0xff) << 8) | (computed_hash[offset + 3] & 0xff)
+    shift_24 = ((computed_hash[offset] & 0x7f) << 24)
+    shift_16 = ((computed_hash[offset + 1] & 0xff) << 16)
+    shift_8 = ((computed_hash[offset + 2] & 0xff) << 8)
+    convert = (computed_hash[offset + 3] & 0xff) # Convert to a number in 0...2^{31}-1
 
-    print('binary: ', binary)
+    dynamic_binary = shift_24 | shift_16 | shift_8 | convert
 
-    print('number of digits required: ', order_of_power[digits])
-
-    otp = binary % order_of_power[digits]
+    otp = dynamic_binary % order_of_power[digits]
 
     result = str(otp)
 
