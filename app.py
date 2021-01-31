@@ -4,7 +4,6 @@ import time
 import hashlib
 import hmac
 import base64
-import struct
 app = Flask(__name__)
 
 time_step = 30 # time step in seconds
@@ -60,10 +59,6 @@ def get_otp(computed_hash):
     convert = (computed_hash[offset + 3] & 0xff) # Convert to a number in 0...2^{31}-1
 
     dynamic_binary = shift_24 | shift_16 | shift_8 | convert
-
-    binary = struct.unpack('>L', computed_hash[offset:offset+4])[0] & 0x7fffffff
-
-    val = str(binary)[-digits:].rjust(digits, '0')
 
     otp = dynamic_binary % order_of_power[digits]
 
