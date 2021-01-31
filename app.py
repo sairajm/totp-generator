@@ -106,7 +106,7 @@ def compute_hash(secretKey, time):
 
 def get_number_of_time_steps():
     # unix_utc_time = datetime.now(tz=timezone.utc).timestamp()
-    number_of_time_steps =  int( time.time() - t0 / time_step )
+    number_of_time_steps =  int( (time.time() - t0) / time_step )
 
     hex_steps = hex(number_of_time_steps).upper()
 

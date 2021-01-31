@@ -36,6 +36,11 @@ If you're a fan of the curl command:
 curl -X GET "http://127.0.0.1:5000/generate?code=base32encodedString&digits=6&alg=sha1"
 ```
 
+To verify that the generator is working as expected
+1. Scan the QR code from website https://www.xanxys.net/totp/ on an authenticator app
+2. Use the link above in sample and hit the server (running on your machine).
+3. Response from the Flask app and your authenticator app should match.
+
 ## Output
 Here is a sample output:
 
