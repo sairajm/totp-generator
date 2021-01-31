@@ -20,6 +20,9 @@ A free time based OTP generator(client). Based on [RFC-6238](https://tools.ietf.
 6. If you want to execute this as a regular python script to try it out
 
     `python3 local.py <<< base32encodedString` or `python3 local.py <<< hexEncodedString`
+    
+If you want to refactor the code as a HOTP generator, replace the `get_number_of_time_steps` with your counter
+and that should do the trick.
 
 ## Input
 
