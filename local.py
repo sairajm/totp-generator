@@ -1,11 +1,10 @@
-from flask import Flask, request
-from datetime import datetime, timezone
+import base64
+import hmac
+import struct
+import sys
 import time
 import hashlib
-import hmac
-import base64
-import struct
-app = Flask(__name__)
+from datetime import datetime, timezone
 
 time_step = 30 # time step in seconds
 t0 = 0
@@ -13,13 +12,12 @@ algorithm = hashlib.sha1
 order_of_power = [1,10,100,1000,10000,100000,1000000,10000000,100000000]
 digits = 6
 
-@app.route('/generate')
-def generate_totp():
+def generate_totp(code, alg="sha256", digits_qp="6"):
     global digits, algorithm
 
-    code_query_param = request.args.get('code')
-    hashing_algorithm = request.args.get('alg')
-    digits_to_return = request.args.get('digits')
+    code_query_param = code
+    hashing_algorithm = alg
+    digits_to_return = digits_qp
 
     if digits_to_return is not None and str(digits_to_return).isnumeric:
         digits = int(digits_to_return)
@@ -138,5 +136,12 @@ def isBase32(s):
     except Exception:
         return False
 
+
+def main():
+    args = [int(x) if x.isdigit() else x for x in sys.argv[1:]]
+    for key in sys.stdin:
+        print(generate_totp(key.strip(), *args))
+
+
 if __name__ == '__main__':
-    app.run()
+    main()

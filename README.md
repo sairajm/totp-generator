@@ -16,7 +16,10 @@ A free time based OTP generator(client). Based on [RFC-6238](https://tools.ietf.
 
     `python app.py`
 
-5. Deploy it in a cloud function or run it locally :)
+5. Deploy it in a cloud function or run the flask server locally :)
+6. If you want to execute this as a regular python script to try it out
+
+    `python3 local.py <<< base32encodedString`
 
 ## Input
 
@@ -30,7 +33,7 @@ Sample input:
 If you're a fan of the curl command:
 
 ```
-curl -X GET "http://127.0.0.1:5000/generate?code=1d319930bdb2ea7d580080f637cd9e53d6ef1767&digits=6&alg=sha256"
+curl -X GET "http://127.0.0.1:5000/generate?code=base32encodedString&digits=6&alg=sha1"
 ```
 
 ## Output
