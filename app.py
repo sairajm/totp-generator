@@ -117,16 +117,6 @@ def get_number_of_time_steps():
 
     return hex_steps
 
-def test_get_time(number_of_time_steps):
-    hex_steps = hex(number_of_time_steps).upper()
-
-    hex_steps = hex_steps[2:len(hex_steps)]
-
-    while (len(hex_steps) < 16):
-        hex_steps = "0" + hex_steps
-
-    return hex_steps
-
 def isBase32(s):
     try:
         return base64.b32encode(base64.b32decode(s)) == bytes(s, 'utf-8')
